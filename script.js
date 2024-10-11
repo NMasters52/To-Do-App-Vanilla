@@ -1,4 +1,4 @@
-function a() {
+function addTask() {
     const li = document.createElement("li");
     const textNode =document.createTextNode(document.getElementById("task").value);
     li.appendChild(textNode);
