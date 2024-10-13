@@ -47,12 +47,26 @@
 
 // setting up local storage
 
-// add task to local storage
+// add task
 function addTask() {
     const taskInput = document.getElementById("task");
     const taskText = taskInput.value;
     if (taskText) {
-        console.log("task added:", taskText);
-        taskInput.value = "";
+        console.log("task added:", taskText); //test
+        taskInput.value = ""; //clears input field after click event
     }
+}
+
+// render the task added
+function renderTask(taskText) {
+
+    // create the li to be rendered
+    const li = document.createElement("li");
+    // adding text to the li 
+    li.textContent = taskText;
+
+    // add delete and add buttons here
+
+    // appending li to the ul
+    document.getElementById("tasksList").appendChild(li);
 }
