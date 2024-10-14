@@ -63,11 +63,41 @@
 
 function addTask() {
     const taskInput = document.getElementById("task");
-    const taskText = taskInput.value;
+    const taskText = taskInput.value.trim();
 
-    const li = document.createElement("li");
-    const textNode = document.createTextNode(taskText);
-    li.appendChild(textNode);
+     // Check if the input is not empty
+     if (taskText === "") {
+        alert("Please enter a task.");
+        return;
+    }
 
-    document.getElementById("taskList").appendChild(li);
+   // Retrieve existing tasks from localStorage
+   let localTasks = [];
+
+   try {
+       const storedTasks = localStorage.getItem("tasks");
+       if (storedTasks) {
+           localTasks = JSON.parse(storedTasks);
+       }
+   } catch (error) {
+       console.error("Failed to parse tasks from localStorage:", error);
+   }
+
+    localTasks.push(taskText);
+
+     // sets tasks text to local storage
+     localStorage.setItem("tasks", JSON.stringify(localTasks));
+
+    console.log(localTasks);
+
+    const taskList = document.getElementById("taskList");
+
+    // render tasks
+    localTasks.map(task => {
+        const li = document.createElement("li");
+        li.textContent = task;
+        taskList.appendChild(li);
+    });
+    
+
 }
