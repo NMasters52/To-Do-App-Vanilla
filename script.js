@@ -45,28 +45,18 @@
 // }
 
 
-// setting up local storage
 
-// add task
-function addTask() {
-    const taskInput = document.getElementById("task");
-    const taskText = taskInput.value;
-    if (taskText) {
-        console.log("task added:", taskText); //test
-        taskInput.value = ""; //clears input field after click event
-    }
-}
 
-// render the task added
-function renderTask(taskText) {
+// *setting up local storage*
 
-    // create the li to be rendered
-    const li = document.createElement("li");
-    // adding text to the li 
-    li.textContent = taskText;
+// create add task function
 
-    // add delete and add buttons here
+// gather value from input when add task is ran
 
-    // appending li to the ul
-    document.getElementById("tasksList").appendChild(li);
-}
+// create the li when add task is ran
+
+// add that value to the li
+
+//store that value in local storage
+
+//render that value on the screen
