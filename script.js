@@ -60,3 +60,14 @@
 //store that value in local storage
 
 //render that value on the screen
+
+function addTask() {
+    const taskInput = document.getElementById("task");
+    const taskText = taskInput.value;
+
+    const li = document.createElement("li");
+    const textNode = document.createTextNode(taskText);
+    li.appendChild(textNode);
+
+    document.getElementById("taskList").appendChild(li);
+}
