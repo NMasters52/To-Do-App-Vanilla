@@ -46,21 +46,6 @@
 
 
 
-
-// *setting up local storage*
-
-// create add task function
-
-// gather value from input when add task is ran
-
-// create the li when add task is ran
-
-// add that value to the li
-
-//store that value in local storage
-
-//render that value on the screen
-
 function addTask() {
     const taskInput = document.getElementById("task");
     const taskText = taskInput.value.trim();
@@ -73,7 +58,7 @@ function addTask() {
 
    // Retrieve existing tasks from localStorage
    let localTasks = [];
-
+ 
    try {
        const storedTasks = localStorage.getItem("tasks");
        if (storedTasks) {
@@ -87,17 +72,23 @@ function addTask() {
 
      // sets tasks text to local storage
      localStorage.setItem("tasks", JSON.stringify(localTasks));
+     console.log(localTasks);
+};
 
-    console.log(localTasks);
-
+// how the tasks are rendered to the ul
+function renderTasks() {
+    const tasks = localStorage.getItem("tasks");
     const taskList = document.getElementById("taskList");
 
-    // render tasks
-    localTasks.map(task => {
-        const li = document.createElement("li");
-        li.textContent = task;
-        taskList.appendChild(li);
-    });
+    const parsedTasks = JSON.parse(tasks);
     
+    parsedTasks.map(task => {
+    const li = document.createElement("li");
+    const textNode = document.createTextNode(task);
+    li.appendChild(textNode);
+    taskList.appendChild(li);
+   })
+};
 
-}
+renderTasks();
+
