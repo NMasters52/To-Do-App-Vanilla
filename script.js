@@ -73,6 +73,9 @@ function addTask() {
      // sets tasks text to local storage
      localStorage.setItem("tasks", JSON.stringify(localTasks));
      console.log(localTasks);
+     taskInput.value = "";
+
+     renderTasks();
 };
 
 // how the tasks are rendered to the ul
@@ -80,15 +83,47 @@ function renderTasks() {
     const tasks = localStorage.getItem("tasks");
     const taskList = document.getElementById("taskList");
 
+     // Clear existing tasks
+     taskList.innerHTML = '';
+
     const parsedTasks = JSON.parse(tasks);
     
     parsedTasks.map(task => {
-    const li = document.createElement("li");
-    const textNode = document.createTextNode(task);
-    li.appendChild(textNode);
-    taskList.appendChild(li);
+        const li = document.createElement("li");
+        const textNode = document.createTextNode(task);
+        li.appendChild(textNode);
+
+        //complete button
+        const completeBtn = document.createElement("button");
+        completeBtn.innerText = "Complete";
+        li.appendChild(completeBtn);
+        // give functionality to complete button
+        completeBtn.onclick = () => {
+            li.style.textDecoration = "line-through";
+        }
+
+        //delete button
+        const deleteBtn = document.createElement("button");
+        deleteBtn.innerText = "Delete";
+        deleteBtn.onclick = () => {
+            const taskToDelete = task;
+            const index = parsedTasks.indexOf(taskToDelete);
+        
+            if (index !== -1) {
+                parsedTasks.splice(index, 1);
+                localStorage.setItem("tasks", JSON.stringify(parsedTasks)); 
+                renderTasks();
+            }
+        };
+        // append delete button to li 
+        li.appendChild(deleteBtn);
+
+            // render the li to the targeted ul
+        taskList.appendChild(li);
    })
 };
+
+
 
 renderTasks();
 
