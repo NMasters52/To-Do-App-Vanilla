@@ -1,4 +1,5 @@
 
+// *Using In-Memory Storage*
 // function addTask() {
 //     // create li to be added
 //     const li = document.createElement("li");
@@ -45,14 +46,14 @@
 // }
 
 
-
+// using *local storage*
 function addTask() {
     const taskInput = document.getElementById("task");
     const taskText = taskInput.value.trim();
 
      // Check if the input is not empty
      if (taskText === "") {
-        alert("Please enter a task.");
+        alert("Please enter a task."); 
         return;
     }
 
@@ -63,16 +64,19 @@ function addTask() {
        const storedTasks = localStorage.getItem("tasks");
        if (storedTasks) {
            localTasks = JSON.parse(storedTasks);
+           if (!Array.isArray(localTasks)) {
+            localTasks = []; // Reset to empty array if not an array
+        }
        }
    } catch (error) {
        console.error("Failed to parse tasks from localStorage:", error);
+       localTasks = [];
    }
 
-    localTasks.push(taskText);
+   localTasks.push({ text: taskText, completed: false });
 
      // sets tasks text to local storage
      localStorage.setItem("tasks", JSON.stringify(localTasks));
-     console.log(localTasks);
      taskInput.value = "";
 
      renderTasks();
@@ -86,41 +90,46 @@ function renderTasks() {
      // Clear existing tasks
      taskList.innerHTML = '';
 
-    const parsedTasks = JSON.parse(tasks);
+    const parsedTasks = JSON.parse(tasks) || [];
     
-    parsedTasks.map(task => {
+    parsedTasks.forEach(task => {
         const li = document.createElement("li");
-        const textNode = document.createTextNode(task);
+        const textNode = document.createTextNode(task.text);
         li.appendChild(textNode);
 
         //complete button
         const completeBtn = document.createElement("button");
-        completeBtn.innerText = "Complete";
+        completeBtn.innerText = task.completed ? "undo" : "Complete";
         li.appendChild(completeBtn);
         // give functionality to complete button
         completeBtn.onclick = () => {
-            li.style.textDecoration = "line-through";
+            task.completed = !task.completed;
+            localStorage.setItem("tasks", JSON.stringify(parsedTasks));
+            renderTasks();
+        };
+        if (task.completed) {
+            li.style.textDecoration = "line-through"; 
         }
 
         //delete button
         const deleteBtn = document.createElement("button");
         deleteBtn.innerText = "Delete";
-        deleteBtn.onclick = () => {
-            const taskToDelete = task;
-            const index = parsedTasks.indexOf(taskToDelete);
-        
-            if (index !== -1) {
-                parsedTasks.splice(index, 1);
-                localStorage.setItem("tasks", JSON.stringify(parsedTasks)); 
-                renderTasks();
-            }
-        };
-        // append delete button to li 
         li.appendChild(deleteBtn);
+        // give delete button functionality
+        deleteBtn.onclick = () => {
+            // Use findIndex to locate the task to delete
+            const indexToDelete = parsedTasks.findIndex(t => t.text === task.text);
+            if (indexToDelete !== -1) {
+                parsedTasks.splice(indexToDelete, 1);
+                localStorage.setItem("tasks", JSON.stringify(parsedTasks)); 
+                renderTasks(); 
+            }
+        }; 
+        
 
             // render the li to the targeted ul
         taskList.appendChild(li);
-   })
+   });
 };
 
 
