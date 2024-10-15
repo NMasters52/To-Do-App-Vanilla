@@ -87,51 +87,78 @@ function renderTasks() {
     const tasks = localStorage.getItem("tasks");
     const taskList = document.getElementById("taskList");
 
-     // Clear existing tasks
-     taskList.innerHTML = '';
+    // Clear existing tasks
+    taskList.innerHTML = '';
 
     const parsedTasks = JSON.parse(tasks) || [];
     
-    parsedTasks.forEach(task => {
+    parsedTasks.forEach((task, index) => {
         const li = document.createElement("li");
-        const textNode = document.createTextNode(task.text);
-        li.appendChild(textNode);
+        li.className = "list-group-item d-flex justify-content-between align-items-center"; // Bootstrap classes for styling
 
-        //complete button
-        const completeBtn = document.createElement("button");
-        completeBtn.innerText = task.completed ? "undo" : "Complete";
-        li.appendChild(completeBtn);
-        // give functionality to complete button
-        completeBtn.onclick = () => {
-            task.completed = !task.completed;
-            localStorage.setItem("tasks", JSON.stringify(parsedTasks));
-            renderTasks();
-        };
+        // Create a span for the text
+        const textSpan = document.createElement("span");
+        textSpan.textContent = task.text;
+        textSpan.style.flexGrow = 1; // Allow text to grow
+        textSpan.style.marginRight = "10px"; // Add space between text and buttons
+
+        // Apply strikethrough if completed
         if (task.completed) {
-            li.style.textDecoration = "line-through"; 
+            textSpan.style.textDecoration = "line-through"; // Apply strikethrough
         }
 
-        //delete button
+        li.appendChild(textSpan);
+
+        // Create a button group
+        const buttonGroup = document.createElement("div");
+        buttonGroup.className = "btn-group";
+
+        // Complete button
+        const completeBtn = document.createElement("button");
+        completeBtn.innerText = task.completed ? "Undo" : "Complete";
+        completeBtn.className = task.completed ? "btn btn-warning btn-sm" : "btn btn-success btn-sm";
+        completeBtn.onclick = () => {
+            task.completed = !task.completed; // Toggle completion status
+            localStorage.setItem("tasks", JSON.stringify(parsedTasks));
+            renderTasks(); // Re-render tasks
+        };
+        buttonGroup.appendChild(completeBtn);
+
+        // Delete button
         const deleteBtn = document.createElement("button");
         deleteBtn.innerText = "Delete";
-        li.appendChild(deleteBtn);
-        // give delete button functionality
+        deleteBtn.className = "btn btn-danger btn-sm"; // Small button for better alignment
         deleteBtn.onclick = () => {
-            // Use findIndex to locate the task to delete
-            const indexToDelete = parsedTasks.findIndex(t => t.text === task.text);
-            if (indexToDelete !== -1) {
-                parsedTasks.splice(indexToDelete, 1);
-                localStorage.setItem("tasks", JSON.stringify(parsedTasks)); 
-                renderTasks(); 
-            }
-        }; 
+            parsedTasks.splice(index, 1);
+            localStorage.setItem("tasks", JSON.stringify(parsedTasks));
+            renderTasks(); // Re-render tasks
+        };
+        buttonGroup.appendChild(deleteBtn);
+
+        // Append button group to the list item
+        li.appendChild(buttonGroup);
         
-
-            // render the li to the targeted ul
+        // Append the list item to the task list
         taskList.appendChild(li);
-   });
-};
+    });
+}
+// Function to toggle dark mode
+function toggleDarkMode() {
+    const body = document.body;
+    const taskItems = document.querySelectorAll('.list-group-item');
+    const isDarkMode = body.classList.toggle('dark-mode');
 
+    taskItems.forEach(item => {
+        item.classList.toggle('dark-mode', isDarkMode);
+    });
+
+    // Change button styles based on the current mode
+    const toggleButton = document.getElementById('darkModeToggle');
+    toggleButton.classList.toggle('btn-dark-mode', isDarkMode);
+}
+
+// Add event listener for the dark mode toggle button
+document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
 
 
 renderTasks();

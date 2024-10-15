@@ -1,0 +1,13 @@
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #343a40; /* Dark background */
+    color: #f8f9fa; /* Light text color */
+}
+
+.list-group-item.dark-mode {
+    border-color: #6c757d; /* Dark border color */
+}
+
+.btn-dark-mode {
+    color: #fff; /* Light button text */
+}
